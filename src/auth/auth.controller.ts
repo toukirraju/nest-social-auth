@@ -4,10 +4,24 @@ import { AuthGuard } from "@nestjs/passport";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
 import { CurrentUser } from "decorators/current-user.decorator";
 import { User } from "src/user/entities/user.entity";
+import { SignupDto } from "./dto/signup.dto";
+import { SigninDto } from "./dto/signin.dto";
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) { }
+
+  // local auth routes
+  @Post('signup')
+  async signup(@Body() signupDto: SignupDto) {
+    return this.authService.signup(signupDto);
+  }
+
+  @Post('signin')
+  @UseGuards(AuthGuard('local'))
+  async signin(@Req() req, @Body() signinDto: SigninDto) {
+    return this.authService.generateTokens(req.user);
+  }
 
   // Google routes
   @Get('google')
