@@ -9,6 +9,7 @@ import { User } from "src/user/entities/user.entity";
 export class AuthController {
   constructor(private authService: AuthService) { }
 
+  // Google routes
   @Get('google')
   @UseGuards(AuthGuard('google'))
   googleLogin() {
@@ -19,6 +20,18 @@ export class AuthController {
   async googleCallback(@Req() req) {
     const { accessToken, refreshToken } = await this.authService.generateTokens(req.user);
     return { accessToken, refreshToken };
+  }
+
+
+  // Facebook routes
+  @Get('facebook')
+  @UseGuards(AuthGuard('facebook'))
+  facebookLogin() { }
+
+  @Get('facebook/callback')
+  @UseGuards(AuthGuard('facebook'))
+  async facebookCallback(@Req() req) {
+    return this.authService.generateTokens(req.user);
   }
 
   @Post('refresh')

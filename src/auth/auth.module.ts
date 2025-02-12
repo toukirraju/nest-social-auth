@@ -11,6 +11,7 @@ import { RefreshToken } from './entities/refresh-token.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from 'strategies/jwt.strategy';
+import { FacebookStrategy } from 'strategies/facebook.strategy';
 
 @Module({
   imports: [
@@ -36,6 +37,6 @@ import { JwtStrategy } from 'strategies/jwt.strategy';
     UserModule
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, GoogleStrategy, JwtStrategy],
+  providers: [AuthService, UserService, GoogleStrategy, FacebookStrategy, JwtStrategy],
 })
 export class AuthModule { }
