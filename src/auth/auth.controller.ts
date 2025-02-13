@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Response } from 'express';
 import { AuthService } from "./auth.service";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtAuthGuard } from "guards/jwt-auth.guard";
@@ -31,9 +32,12 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleCallback(@Req() req) {
+  async googleCallback(@Req() req, @Res() res: Response) {
     const { accessToken, refreshToken } = await this.authService.generateTokens(req.user);
-    return { accessToken, refreshToken };
+    // return { accessToken, refreshToken };
+    // Redirect to frontend with tokens as query params
+    res.redirect(`http://localhost:3000/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`);
+
   }
 
 
@@ -44,8 +48,12 @@ export class AuthController {
 
   @Get('facebook/callback')
   @UseGuards(AuthGuard('facebook'))
-  async facebookCallback(@Req() req) {
-    return this.authService.generateTokens(req.user);
+  async facebookCallback(@Req() req, @Res() res: Response) {
+    const { accessToken, refreshToken } = await this.authService.generateTokens(req.user);
+    // return { accessToken, refreshToken };
+    // Redirect to frontend with tokens as query params
+    res.redirect(`http://localhost:3000/auth/callback?accessToken=${accessToken}&refreshToken=${refreshToken}`);
+
   }
 
   @Post('refresh')
@@ -53,12 +61,7 @@ export class AuthController {
     return this.authService.rotateRefreshToken(refreshToken);
   }
 
-  // Protected routes examples
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  getProfile(@CurrentUser() user: User) {
-    return user;
-  }
+
 
   @Get('protected')
   @UseGuards(JwtAuthGuard)
