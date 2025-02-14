@@ -10,6 +10,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TokenCleanupService } from 'Services/token-cleanup.service';
 import { RefreshToken } from './auth/entities/refresh-token.entity';
+import { PaymentModule } from './payment/payment.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -25,6 +26,7 @@ import { RefreshToken } from './auth/entities/refresh-token.entity';
     AuthModule,
     UserModule,
     TypeOrmModule.forFeature([RefreshToken]),
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [AppService, TokenCleanupService],
